@@ -78,7 +78,6 @@ export default class HomeScreen extends Component {
             <CardItem>
               <Left>
                 <Button transparent textStyle={{color: '#87838B'}}>
-                  <Icon name="logo-github" />
                   <Text>1,926 stars</Text>
                 </Button>
               </Left>
@@ -102,16 +101,14 @@ export default class HomeScreen extends Component {
               <Icon name="search" style={{position: 'absolute', marginLeft: 100}} />
               <Input placeholder= "Search" style={{textAlign: 'center'}} onChangeText={this.handleSearch}/>
           </Item>
-          <Content>
 
 
             <FlatList
               data={this.state.dataSource}
               renderItem={this.renderItem}
-              keyExtractor={(item, index) => index}
+              keyExtractor={(item, index) => index.toString()}
             />
 
-          </Content>
             <Footer>
               <FooterTab>
                 <Button full>

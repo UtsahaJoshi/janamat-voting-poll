@@ -95,38 +95,11 @@ const App = () => {
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
 
   const authContext = React.useMemo(() => ({
-    signIn: async(userEmail, password) => {
+    signIn: async(Token, userEmail) => {
       let userToken;
-      userToken = null;
-
-      await fetch('http://127.0.0.1:3000/api/v1/users/login', {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            email: userEmail,
-            password: password,
-        })
-      })
-          .then ((response) => response.json())
-          .then( async (responseJson) => {
-            try {
-              console.log(responseJson.token)
-              userToken = responseJson.token;
-              if (userToken == null) {
-                console.log('nullboy')
-              }
-              await AsyncStorage.setItem('userToken', userToken)
-              dispatch({type: 'LOGIN', id: userEmail, token: userToken})
-            } catch (e) {
-              console.log('error', e)
-            }
-          })
-        .catch((error) => {
-          console.log(error)
-        });
+      userToken = Token;
+      await AsyncStorage.setItem('userToken', userToken)
+      dispatch({type: 'LOGIN', id: userEmail, token: userToken})
     },
     signOut: async () => {
       // setUserToken(null);
@@ -138,9 +111,11 @@ const App = () => {
       }
       dispatch({type: 'LOGOUT'})
     },
-    signUp: () => {
-      setUserToken('abcd');
-      setIsLoading(false);
+    signUp: async (Token, userEmail) => {
+      let userToken;
+      userToken = Token;
+      await AsyncStorage.setItem('userToken', userToken)
+      dispatch({type: 'REGISTER', id: userEmail, token: userToken})
     },
   }), []);
 

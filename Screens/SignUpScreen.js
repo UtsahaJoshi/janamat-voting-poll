@@ -14,38 +14,61 @@ const SignUpScreen = ({navigation}) => {
     check_textInputChange: false,
     secureTextEntry: true,
     confirm_secureTextEntry: true,
+    isValidEmail: true,
+    isValidPassword: true,
+    isValidConfirmPassword: true
   });
 
   const { signUp } = React.useContext(AuthContext);
 
   const textInputChange = (val) => {
-    if (val.length != 0) {
+    if (val.includes('@')) {
       setData({
         ...data,
         email: val,
-        check_textInputChange: true
+        check_textInputChange: true,
+        isValidEmail: true,
       });
     } else {
       setData({
         ...data,
         email: val,
-        check_textInputChange: false
+        check_textInputChange: false,
+        isValidEmail: false,
       });
     }
   }
 
   const handlePasswordChange = (val) => {
-    setData({
-      ...data,
-      password: val
-    })
+    if (val.length >= 8) {
+      setData({
+        ...data,
+        password: val,
+        isValidPassword: true,
+      })
+    } else {
+      setData({
+        ...data,
+        password: val,
+        isValidPassword: false,
+      })
+    }
   }
 
   const handleConfirmPasswordChange = (val) => {
-    setData({
-      ...data,
-      confirm_password: val
-    })
+    if (val == data.password) {
+      setData({
+        ...data,
+        confirm_password: val,
+        isValidConfirmPassword: true
+      })
+    } else {
+      setData({
+        ...data,
+        confirm_password: val,
+        isValidConfirmPassword: false
+      })
+    }
   }
 
   const updateSecureTextEntry = () => {
@@ -59,6 +82,38 @@ const SignUpScreen = ({navigation}) => {
       ...data,
       confirm_secureTextEntry: !data.confirm_secureTextEntry
     })
+  }
+
+  const signUpHandle = async () => {
+    let userToken;
+    userToken = null;
+    await fetch('http://127.0.0.1:3000/api/v1/users/signup', {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            email: data.email,
+            password: data.password,
+            passwordConfirm: data.confirm_password,
+        })
+      })
+          .then ((response) => response.json())
+          .then( (responseJson) => {
+            try {
+              // if login detail failed code doesnt go inside the try block and no errors shown either
+              userToken = responseJson.token;
+              console.log(responseJson)
+              signUp(userToken, data.email)
+
+            } catch (e) {
+              console.log('error', e)
+            }
+          })
+        .catch((error) => {
+          console.log(error)
+        });
   }
     return (
       <Container style={styles.container}>
@@ -85,7 +140,11 @@ const SignUpScreen = ({navigation}) => {
 
               : null}
             </View>
-
+            {data.isValidEmail ? null :
+              <Animatable.View animation="fadeInLeft">
+                <Text style={styles.errorMsg}>Must be a valid email.</Text>
+              </Animatable.View>
+            }
             <Text style={[styles.text_footer, {
               marginTop: 35
             }]}>Password</Text>
@@ -105,7 +164,11 @@ const SignUpScreen = ({navigation}) => {
                 <Icon name="eye" size={24} color="grey" /> }
               </TouchableOpacity>
             </View>
-
+            {data.isValidPassword ? null : 
+              <Animatable.View animation="fadeInLeft">
+                <Text style={styles.errorMsg}>Password must be 8 characters long.</Text>
+              </Animatable.View>
+            }
             <Text style={[styles.text_footer, {
               marginTop: 35
             }]}>Confirm Password</Text>
@@ -125,9 +188,13 @@ const SignUpScreen = ({navigation}) => {
                 <Icon name="eye" size={24} color="grey" /> }
               </TouchableOpacity>
             </View>
-
+            {data.isValidConfirmPassword ? null : 
+              <Animatable.View animation="fadeInLeft">
+                <Text style={styles.errorMsg}>Passwords do not match.</Text>
+              </Animatable.View>
+            }
             <View style={styles.button}>
-                <Button onPress={()=> {signUp()}}  style={styles.signIn}>
+                <Button onPress={()=> {signUpHandle()}}  style={styles.signIn}>
                   <Text style={[styles.textSign, {
                     color: '#fff'
                   }]}>Sign Up</Text>

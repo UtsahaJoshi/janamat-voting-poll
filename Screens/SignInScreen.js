@@ -13,7 +13,8 @@ const SignInScreen = ({navigation}) => {
     check_textInputChange: false,
     secureTextEntry: true,
     isValidEmail: true,
-    isValidPassword: true
+    isValidPassword: true,
+    logInFailed: false,
   });
 
   const { signIn } = React.useContext(AuthContext);
@@ -59,7 +60,7 @@ const SignInScreen = ({navigation}) => {
     })
   }
 
-  const loginHandle = async (userEmail, password) => {
+  const loginHandle = async () => {
     let userToken;
     userToken = null;
     await fetch('http://127.0.0.1:3000/api/v1/users/login', {
@@ -69,28 +70,24 @@ const SignInScreen = ({navigation}) => {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            email: userEmail,
-            password: password,
+            email: data.email,
+            password: data.password,
         })
       })
           .then ((response) => response.json())
           .then( (responseJson) => {
             try {
-              console.log(responseJson.token)
+              // if login detail failed code doesnt go inside the try block and no errors shown either
               userToken = responseJson.token;
-              console.log('hello')
-              if (userToken) {
-                console.log('nothing')
-              }
+              signIn(userToken, data.email)
+
             } catch (e) {
               console.log('error', e)
             }
           })
         .catch((error) => {
-          console.log('helllllo')
           console.log(error)
         });
-        console.log(userToken)
   }
     return (
       <Container style={styles.container}>
@@ -148,9 +145,15 @@ const SignInScreen = ({navigation}) => {
                 <Text style={styles.errorMsg}>Password must be 8 characters long.</Text>
               </Animatable.View>
             }
-
+            {data.logInFailed ? 
+                          <Animatable.View animation="fadeInLeft">
+                          <Text style={styles.errorMsg}>User does not exist. Try Again!</Text>
+                        </Animatable.View>
+                        :
+                        null
+            }
             <View style={styles.button}>
-                <Button onPress={()=> {loginHandle(data.email, data.password)}} style={styles.signIn}>
+                <Button onPress={()=> {loginHandle()}} style={styles.signIn}>
                   <Text style={[styles.textSign, {
                     color: '#fff'
                   }]}>Sign In</Text>
