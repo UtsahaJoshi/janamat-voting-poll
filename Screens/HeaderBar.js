@@ -14,10 +14,10 @@ export default class HeaderBar extends Component {
 
   render() {
     return (
-        <Header>
+        <Header style={{backgroundColor: '#009387'}}>
           <Left>
               <Button transparent>
-              <Icon name="bars" onPress={() => this.props.nav.openDrawer()} size={24} color="#cc5500" />
+              <Icon name="bars" onPress={() => this.props.nav.openDrawer()} size={24} color="#000" />
               </Button>
           </Left>
           <Body>

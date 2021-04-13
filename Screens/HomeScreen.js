@@ -4,7 +4,6 @@ import _ from 'lodash';
 import HeaderBar from './HeaderBar';
 import { Text, FooterTab, Button, Container, Content, Item, Input, Body, Card, CardItem, Footer, Left, Right, Header, Title, Thumbnail} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { SafeAreaView } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export default class HomeScreen extends Component {
@@ -54,10 +53,9 @@ export default class HomeScreen extends Component {
       })
       this.setState({query: formatQuery, dataSource: data})
   }
-
   renderItem = ({ item }) => {
       return (
-        <Card style={{flex:0, borderTopWidth:0}}>
+        <Card style={{flex:0}}>
           <CardItem>
               <Left>
                 <Thumbnail source={{uri: item.pollImage}} />
@@ -109,7 +107,7 @@ export default class HomeScreen extends Component {
               keyExtractor={(item, index) => index.toString()}
             />
 
-            <Footer>
+            <Footer style={{backgroundColor: '#009387'}}>
               <FooterTab>
                 <Button full>
                   <Text>© Liveasily 2021</Text>

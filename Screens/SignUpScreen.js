@@ -5,15 +5,20 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import * as Animatable from 'react-native-animatable';
 
 import { AuthContext} from '../Components/context';
+import { useNavigation } from '@react-navigation/native';
 
-const SignUpScreen = ({navigation}) => {
+const SignUpScreen = (props) => {
+  const navigation = useNavigation();
   const [data, setData] = React.useState({
+    name: '',
     email: '',
     password:'',
     comfirm_password:'',
-    check_textInputChange: false,
+    check_textEmailInputChange: false,
+    check_textNameInputChange: false,
     secureTextEntry: true,
     confirm_secureTextEntry: true,
+    isValidName: true,
     isValidEmail: true,
     isValidPassword: true,
     isValidConfirmPassword: true
@@ -21,20 +26,38 @@ const SignUpScreen = ({navigation}) => {
 
   const { signUp } = React.useContext(AuthContext);
 
-  const textInputChange = (val) => {
+  const textEmailInputChange = (val) => {
     if (val.includes('@')) {
       setData({
         ...data,
         email: val,
-        check_textInputChange: true,
+        check_textEmailInputChange: true,
         isValidEmail: true,
       });
     } else {
       setData({
         ...data,
         email: val,
-        check_textInputChange: false,
+        check_textEmailInputChange: false,
         isValidEmail: false,
+      });
+    }
+  }
+
+  const textNameInputChange = (val) => {
+    if (val.length >= 4) {
+      setData({
+        ...data,
+        name: val,
+        check_textNameInputChange: true,
+        isValidName: true,
+      });
+    } else {
+      setData({
+        ...data,
+        name: val,
+        check_textNameInputChange: false,
+        isValidName: false,
       });
     }
   }
@@ -94,9 +117,10 @@ const SignUpScreen = ({navigation}) => {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            email: data.email,
-            password: data.password,
-            passwordConfirm: data.confirm_password,
+          name: data.name,
+          email: data.email,
+          password: data.password,
+          passwordConfirm: data.confirm_password,
         })
       })
           .then ((response) => response.json())
@@ -122,16 +146,41 @@ const SignUpScreen = ({navigation}) => {
             <Text style={styles.text_header}>Register Now!</Text>
         </View>
         <Animatable.View animation="fadeInUpBig" style={styles.footer}>
-            <Text style={styles.text_footer}>Email</Text>
+            <Text style={styles.text_footer}>Name</Text>
             <View style={styles.action}>
               <Icon name="user" size={24} color="#05375a" />
+              <TextInput
+                placeholder="Your Name"
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={(val) => textNameInputChange(val)}
+              />
+              {data.check_textNameInputChange ?
+              <Animatable.View
+                animation="bounceIn"
+                >
+                  <Icon name="check-circle" size={24} color="green" />
+                </Animatable.View>
+
+              : null}
+            </View>
+            {data.isValidName ? null :
+              <Animatable.View animation="fadeInLeft">
+                <Text style={styles.errorMsg}>Must be longer than 4 characters.</Text>
+              </Animatable.View>
+            }
+            <Text style={styles.text_footer, {
+              marginTop: 35
+            }}>Email</Text>
+            <View style={styles.action}>
+              <Icon name="envelope" size={24} color="#05375a" />
               <TextInput
                 placeholder="Your Email"
                 style={styles.textInput}
                 autoCapitalize="none"
-                onChangeText={(val) => textInputChange(val)}
+                onChangeText={(val) => textEmailInputChange(val)}
               />
-              {data.check_textInputChange ?
+              {data.check_textEmailInputChange ?
               <Animatable.View
                 animation="bounceIn"
                 >
@@ -145,6 +194,7 @@ const SignUpScreen = ({navigation}) => {
                 <Text style={styles.errorMsg}>Must be a valid email.</Text>
               </Animatable.View>
             }
+            
             <Text style={[styles.text_footer, {
               marginTop: 35
             }]}>Password</Text>

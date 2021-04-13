@@ -1,15 +1,11 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import {
-    useTheme,
     Avatar,
     Title,
     Caption,
     Paragraph,
     Drawer,
-    Text,
-    TouchableRipple,
-    Switch
 } from 'react-native-paper';
 import {
     DrawerContentScrollView,
@@ -19,12 +15,33 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import{ AuthContext } from './context';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export function DrawerNavigatorComponent(props) {
 
-    const paperTheme = useTheme();
-
-    const { signOut, toggleTheme} = React.useContext(AuthContext);
+    fetchUserDetails = async() => {
+        var DEMO_TOKEN = await AsyncStorage.getItem('userToken');
+        return fetch('http://127.0.0.1:3000/api/v1/user', {
+          method: "GET",
+          headers: {
+            'Authorization': 'Bearer ' + DEMO_TOKEN
+          }
+        })
+          .then ( (response) => response.json())
+          .then( (responseJson) => {
+            console.log("USER DETAIL: ", responseJson.data)
+            // this.setState({
+            //   isLoading: false,
+            //   dataSource: responseJson.data.polls,
+            //   searchData: responseJson.data.polls,
+            // })
+          })
+        .catch((error) => {
+          console.log(error)
+        });
+      }
+      fetchUserDetails()
+    const { signOut} = React.useContext(AuthContext);
 
     return(
         <View style={{flex:1}}>
@@ -112,16 +129,6 @@ export function DrawerNavigatorComponent(props) {
                             label="Payment Option"
                             onPress={() => {props.navigation.navigate('Payment')}}
                         />
-                    </Drawer.Section>
-                    <Drawer.Section title="Preferences">
-                        <TouchableRipple onPress={() => {toggleTheme()}}>
-                            <View style={styles.preference}>
-                                <Text>Dark Theme</Text>
-                                <View pointerEvents="none">
-                                    <Switch value={paperTheme.dark}/>
-                                </View>
-                            </View>
-                        </TouchableRipple>
                     </Drawer.Section>
                 </View>
             </DrawerContentScrollView>

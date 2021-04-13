@@ -6,7 +6,12 @@ import * as Animatable from 'react-native-animatable';
 
 import { AuthContext} from '../Components/context';
 
-const SignInScreen = ({navigation}) => {
+import { useNavigation } from '@react-navigation/native';
+
+const SignInScreen = (props) => {
+  const navigation = useNavigation();
+
+
   const [data, setData] = React.useState({
     email: '',
     password:'',
@@ -60,35 +65,6 @@ const SignInScreen = ({navigation}) => {
     })
   }
 
-  const loginHandle = async () => {
-    let userToken;
-    userToken = null;
-    await fetch('http://127.0.0.1:3000/api/v1/users/login', {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            email: data.email,
-            password: data.password,
-        })
-      })
-          .then ((response) => response.json())
-          .then( (responseJson) => {
-            try {
-              // if login detail failed code doesnt go inside the try block and no errors shown either
-              userToken = responseJson.token;
-              signIn(userToken, data.email)
-
-            } catch (e) {
-              console.log('error', e)
-            }
-          })
-        .catch((error) => {
-          console.log(error)
-        });
-  }
     return (
       <Container style={styles.container}>
         <StatusBar backgroundColor='#009387' barStyle='light-content' />
@@ -153,7 +129,7 @@ const SignInScreen = ({navigation}) => {
                         null
             }
             <View style={styles.button}>
-                <Button onPress={()=> {loginHandle()}} style={styles.signIn}>
+                <Button onPress={()=> {signIn(data.email, data.password)}} style={styles.signIn}>
                   <Text style={[styles.textSign, {
                     color: '#fff'
                   }]}>Sign In</Text>

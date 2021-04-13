@@ -6,18 +6,12 @@
  * @flow strict-local
  */
 
-import React, { Component } from 'react';
+import React from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
   View,
-  Text,
-  Image,
   ActivityIndicator,
 } from 'react-native';
 
-import { Container, Header, Left, Body, Right, Button} from 'native-base';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 
@@ -30,10 +24,6 @@ import PaymentScreen from './Screens/PaymentScreen';
 import CategoryScreen from './Screens/CategoryScreen';
 import CreatePollScreen from './Screens/CreatePollScreen';
 
-import vote from './images/vote.png';
-import grey from './images/green.jpeg';
-
-
 
 
 import { useEffect } from 'react';
@@ -45,14 +35,11 @@ import {NavigationContainer} from '@react-navigation/native'
 import {DrawerNavigatorComponent} from './Components/DrawerNavigatorComponent';
 
 
-
 Icon.loadFont();
 const Drawer = createDrawerNavigator();
+
 const App = () => {
 
-
-  // const [isLoading, setIsLoading] = React.useState(true);
-  // const [userToken, setUserToken] = React.useState(null);
 
   initialLoginState = {
     isLoading: true,
@@ -95,15 +82,38 @@ const App = () => {
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
 
   const authContext = React.useMemo(() => ({
-    signIn: async(Token, userEmail) => {
+    signIn: async(email, password) => {
       let userToken;
-      userToken = Token;
-      await AsyncStorage.setItem('userToken', userToken)
-      dispatch({type: 'LOGIN', id: userEmail, token: userToken})
+      userToken = null;
+      await fetch('http://127.0.0.1:3000/api/v1/users/login', {
+          method: 'POST',
+          headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              email: email,
+              password: password,
+          })
+        })
+            .then ((response) => response.json())
+            .then( (responseJson) => {
+              try {
+                // if login detail failed code doesnt go inside the try block and no errors shown either
+                userToken = responseJson.token;
+                AsyncStorage.setItem('userToken', userToken)
+                dispatch({type: 'LOGIN', id: email, token: userToken})
+  
+              } catch (e) {
+                console.log('error', e)
+              }
+            })
+          .catch((error) => {
+            console.log(error)
+          });
+
     },
     signOut: async () => {
-      // setUserToken(null);
-      // setIsLoading(false)
       try {
         userToken = await AsyncStorage.removeItem('userToken')
       } catch(e) {
@@ -116,7 +126,7 @@ const App = () => {
       userToken = Token;
       await AsyncStorage.setItem('userToken', userToken)
       dispatch({type: 'REGISTER', id: userEmail, token: userToken})
-    },
+    }
   }), []);
 
   useEffect(() => {
@@ -141,25 +151,23 @@ const App = () => {
   }
 
   return (
-    <AuthContext.Provider value={authContext}>
-      <NavigationContainer>
-        { loginState.userToken !== null ? (
-          <Drawer.Navigator drawerContent={props => <DrawerNavigatorComponent {...props} /> } >
-            <Drawer.Screen name="Home" component={HomeScreen} />
-            <Drawer.Screen name="Profile" component={ProfileScreen} />
-            <Drawer.Screen name="Create" component={CreatePollScreen} />
-            <Drawer.Screen name="Category" component={CategoryScreen} />
-            <Drawer.Screen name="Payment" component={PaymentScreen} />
-            <Drawer.Screen name="Feedback" component={FeedbackScreen} />
-          </Drawer.Navigator>
-        )
-      :
-      <RootStackNavigator />
-      }
-      </NavigationContainer>
-    </AuthContext.Provider>
-
-
+      <AuthContext.Provider value={authContext}>
+        <NavigationContainer>
+          { loginState.userToken !== null ? (
+            <Drawer.Navigator drawerContent={props => <DrawerNavigatorComponent {...props} /> } >
+              <Drawer.Screen name="Home" component={HomeScreen} />
+              <Drawer.Screen name="Profile" component={ProfileScreen} />
+              <Drawer.Screen name="Create" component={CreatePollScreen} />
+              <Drawer.Screen name="Category" component={CategoryScreen} />
+              <Drawer.Screen name="Payment" component={PaymentScreen} />
+              <Drawer.Screen name="Feedback" component={FeedbackScreen} />
+            </Drawer.Navigator>
+          )
+        :
+        <RootStackNavigator />
+        }
+        </NavigationContainer>
+      </AuthContext.Provider>
   )
 }
 
