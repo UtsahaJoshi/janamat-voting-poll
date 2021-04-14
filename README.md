@@ -24,6 +24,10 @@ Sign in Screen where the user can log in to their existing accounts.
 
 3. Sign Up Screen
 
+Sign Up Screen where a user can create a new account.
+
+![videoscreen (online-video-cutter com) (3)](https://user-images.githubusercontent.com/41834623/114652955-b1021380-9d06-11eb-9c69-19bfb5943ef8.gif)
+
 4. Profile Screen
 
 Profile screen which displays the user profile and other activities.
@@ -38,9 +42,15 @@ Home Screen that displays all polls and allows the logged in user to search for 
 
 6. Payment Screen
 
+Payment screen to add esewa account to request payment.
+
+![videoscreen (online-video-cutter com) (1)](https://user-images.githubusercontent.com/41834623/114652802-549ef400-9d06-11eb-8481-187287579883.gif)
+
 7. FeedBack Screen
 
+Feedback screen for users to send feeback and star user rating.
 
+![videoscreen (online-video-cutter com) (2)](https://user-images.githubusercontent.com/41834623/114652933-9f207080-9d06-11eb-910c-fcff989f7d99.gif)
 
 
 ## License & Copyright
