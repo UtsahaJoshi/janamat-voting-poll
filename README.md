@@ -26,8 +26,7 @@ Sign in Screen where the user can log in to their existing accounts.
 
 
 3. Sign Up Screen
-
-4. Profile Screen
+![ezgif com-gif-maker (3)](https://user-images.githubusercontent.com/41834623/114651258-55825680-9d03-11eb-9e14-21781f104e23.gif)4. Profile Screen
 
 5. Home Screen
 
