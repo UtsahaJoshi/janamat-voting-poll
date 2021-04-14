@@ -20,13 +20,17 @@ The starting screen which prompts the user to get started with the application.
 2. Sign In Screen
 
 Sign in Screen where the user can log in to their existing accounts.
-
+<p align='center'>
 ![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/41834623/114650775-89a94780-9d02-11eb-8318-27e8faf22ff6.gif)
-
-
+</p>
 
 3. Sign Up Screen
-![ezgif com-gif-maker (3)](https://user-images.githubusercontent.com/41834623/114651258-55825680-9d03-11eb-9e14-21781f104e23.gif)4. Profile Screen
+
+4. Profile Screen
+
+Profile screen which displays the user profile and other activities.
+
+![ezgif com-gif-maker (4)](https://user-images.githubusercontent.com/41834623/114651475-c45faf80-9d03-11eb-9803-b3484aaa747f.gif)
 
 5. Home Screen
 
