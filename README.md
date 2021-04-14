@@ -11,10 +11,18 @@ A voting poll application made using React Native.
 
 ## Screens
 1. Splash Screen
-![splash](https://user-images.githubusercontent.com/41834623/114648814-21a53200-9cff-11eb-85b4-05e6c3dfe7cd.gif)
+
+The starting screen which prompts the user to get started with the application.
+
+![ezgif com-gif-maker](https://user-images.githubusercontent.com/41834623/114650678-61b9e400-9d02-11eb-8ba7-9f72f26b9db3.gif)
+
 
 2. Sign In Screen
-![My Movie](https://user-images.githubusercontent.com/41834623/114649223-d0e20900-9cff-11eb-92e9-244f57138a9f.gif)
+
+Sign in Screen where the user can log in to their existing accounts.
+
+![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/41834623/114650775-89a94780-9d02-11eb-8318-27e8faf22ff6.gif)
+
 
 
 3. Sign Up Screen
@@ -23,7 +31,10 @@ A voting poll application made using React Native.
 
 5. Home Screen
 
-https://user-images.githubusercontent.com/41834623/114649370-24545700-9d00-11eb-96dc-5adf414c3649.mp4
+Home Screen that displays all polls and allows the logged in user to search for a specific poll. 
+
+![ezgif com-gif-maker (2)](https://user-images.githubusercontent.com/41834623/114650849-a776ac80-9d02-11eb-875b-aeb966d46e9f.gif)
+
 
 
 6. Payment Screen
